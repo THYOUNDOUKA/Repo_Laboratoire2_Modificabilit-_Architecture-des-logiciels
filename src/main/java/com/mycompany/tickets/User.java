@@ -101,7 +101,7 @@ public class User {
                 .ifPresentOrElse(
                         t -> {
                             // Utilisation de Stream pour formater l'affichage
-                            System.out.println("\n=== Détails du Ticket ===");
+                            System.out.println("Détails du Ticket ");
                             System.out.println("ID: " + t.getTicketID());
                             System.out.println("Titre: " + t.getTitle());
                             System.out.println("Description: " + t.getDescription());
@@ -109,7 +109,7 @@ public class User {
                             System.out.println("Priorité: " + t.getPriority());
                             System.out.println("Date de création: " + t.getCreationDate());
                             System.out.println("Date de mise à jour: " + t.getUpdateDate());
-                            System.out.println("========================");
+
 
 
 
@@ -118,7 +118,7 @@ public class User {
                                     .anyMatch(myTicket -> myTicket.getTicketID() == t.getTicketID());
 
                             if (isMyTicket) {
-                                System.out.println("✓ Vous êtes le créateur de ce ticket");
+                                System.out.println(" Vous êtes le créateur de ce ticket");
                             }
                             System.out.println();
                         },
@@ -159,7 +159,7 @@ public class User {
                         () -> {
                             // Message d'erreur plus détaillé avec Stream
                             String errorMessage = Optional.ofNullable(ticket)
-                                    .map(t -> "Le ticket #" + t.getTicketID() + " ne vous appartient pas")
+                                    .map(t -> "Le ticket " + t.getTicketID() + " ne vous appartient pas")
                                     .orElse("Ticket null - impossible de mettre à jour");
 
                             System.out.println("Erreur: " + errorMessage);
@@ -172,9 +172,9 @@ public class User {
     public String toString() {
         return "User{" +
                 "userID=" + userID +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", role='" + role + '\'' +
+                ", name='" + name +
+                ", email='" + email +
+                ", role='" + role  +
                 ", ticketsCreated=" + createdTickets.size() +
                 '}';
     }
