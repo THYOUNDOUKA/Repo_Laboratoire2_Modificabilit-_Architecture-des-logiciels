@@ -45,6 +45,7 @@ public Admin() {
 
     }
     List<Ticket> viewAllTickets() {
+        return null;
 
     };
 
