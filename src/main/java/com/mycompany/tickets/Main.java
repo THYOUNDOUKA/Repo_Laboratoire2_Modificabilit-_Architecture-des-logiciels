@@ -1,65 +1,74 @@
-package com.mycompany.tickets;// doit matcher le dossier
+package com.mycompany.tickets;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-
 public class Main {
-    public static void main(String[] args) {
-        List<Ticket> allTickets = new ArrayList<>();
-        List<Ticket> user1Tickets = new ArrayList<>();
-        List<Ticket> user2Tickets = new ArrayList<>();
+    public static void main(String[] args) throws Exception {
 
-        // --- Création des utilisateurs ---
-        User user1 = new User(1, "Eliel", "eliel@mail.com", user1Tickets, "Employé");
-        User user2 = new User(2, "Maelle", "maelle@mail.com", user2Tickets, "Technicien");
+        // --- Utilisateurs
+        User alice = new User(1, "Alice", "alice@uqac.ca");        // non-dev
+        Developer bob = new Developer(2, "Bob", "bob@uqac.ca");    // dev
+        Developer chris = new Developer(3, "Chris", "chris@uqac.ca");
 
-        // --- Création de l’admin ---
-        Admin admin = new Admin(100, "Mickael", "Mickael.admin@mail.com");
+        List<User> users = List.of(alice, bob, chris);
+        List<Ticket> tickets = new ArrayList<>();
 
-        // --- Création de tickets ---
-        Ticket t1 = new Ticket(101, "Problème de connexion",
-                "Impossible de se connecter au réseau",
-                "OUVERT", "MOYENNE", new Date(), null);
+        // === TICKET 1 : flux classique OUVERT -> ASSIGNE -> VALIDATION -> TERMINE
+        Ticket t1 = new Ticket(101, "Bug: sauvegarde", alice, Priority.HAUTE);
+        t1.setTicketDescription(new TextDescription("Crash quand je clique sur 'Enregistrer'"));
+        t1.addComment(new ImageDescription("screenshots/save_error.png"));
+        t1.addComment(new VideoDescription("videos/repro.mp4"));
 
-        Ticket t2 = new Ticket(102, "Erreur application",
-                "Crash lors du lancement",
-                "OUVERT", "URGENTE", new Date(), null);
+        // Manager avec utilisateur courant non-dev (Alice)
+        TicketManager mUser = new TicketManager(users, tickets, alice);
+        mUser.createTicket(t1);
 
-        // --- User crée ses tickets ---
-        user1.createTicket(t1);
-        user2.createTicket(t2);
+        System.out.println("\n== Vue initiale (Alice) ==");
+        mUser.viewTicket(t1);
 
-        // Ajout à la liste globale
-        allTickets.add(t1);
-        allTickets.add(t2);
+        System.out.println("\n== Tentative d'assignation par Alice (non-dev) ==");
+        mUser.assignTicket(t1, bob); // doit être refusé (contrôle de rôle)
 
-        // --- Affichage des tickets créés ---
-        System.out.println("--- Tickets créés ---");
-        user1.viewTicket(t1);
-        user2.viewTicket(t2);
+        // Manager avec utilisateur courant dev (Bob)
+        TicketManager mDev = new TicketManager(users, tickets, bob);
 
-        // --- Admin assigne un ticket ---
-        System.out.println("--- Assignation par Admin ---");
-        admin.assignTicket(t1, user2);
+        System.out.println("\n== Assignation par Bob (dev) ==");
+        mDev.assignTicket(t1, bob); // passe en ASSIGNE
 
-        // --- User travaille sur le ticket ---
-        t1.addComment("Analyse du problème en cours...");
-        t1.updateStatus("VALIDATION");
+        System.out.println("\n== Fermeture via service (ASSIGNE -> VALIDATION -> TERMINE) ==");
+        mDev.closeTicket(t1);
+        mDev.viewTicket(t1);
 
-        // --- Admin ferme un ticket ---
-        System.out.println("--- Fermeture du ticket ---");
-        admin.closeTicket(t2);
+        // === TICKET 2 : fermeture directe SANS assignation (OUVERT -> TERMINE)
+        Ticket t2 = new Ticket(102, "Demande non prioritaire", alice, Priority.BASSE);
+        t2.setTicketDescription(new TextDescription("Cas spécifique utilisateur, fermeture directe."));
+        mDev.createTicket(t2);
 
-        // --- Admin visualise tous les tickets ---
-        System.out.println("--- Vue globale Admin ---");
-        admin.viewAllTickets(allTickets);
+        System.out.println("\n== Fermeture directe SANS assignation (OUVERT -> TERMINE) ==");
+        try {
+            // IMPORTANT : nécessite votre modification dans Ticket.updateStatus (autoriser OUVERT -> TERMINE)
+            t2.updateStatus(TicketStatus.TERMINE);
+            System.out.println("Fermeture directe réussie pour le ticket #" + t2.getTicketID());
+        } catch (Exception e) {
+            System.out.println("Échec fermeture directe: " + e.getMessage());
+        }
+        mDev.viewTicket(t2);
 
-        // --- Résumé des objets ---
-        System.out.println("Résumé des objets :");
-        System.out.println(user1);
-        System.out.println(user2);
-        System.out.println(admin);
+        // === Export PDF (texte formaté) via Strategy
+        System.out.println("\n== Export PDF simulé (texte) ==");
+        ExportStrategy exporter = new PdfExporter();
+        try (FileOutputStream f1 = new FileOutputStream("ticket101_export.txt")) {
+            exporter.export(t1, f1);
+        }
+        try (FileOutputStream f2 = new FileOutputStream("ticket102_export.txt")) {
+            exporter.export(t2, f2);
+        }
+        System.out.println("Exports générés : ticket101_export.txt, ticket102_export.txt");
+
+        // === Liste de tous les tickets
+        System.out.println("\n== Liste des tickets ==");
+        mDev.viewAllTickets();
     }
 }
