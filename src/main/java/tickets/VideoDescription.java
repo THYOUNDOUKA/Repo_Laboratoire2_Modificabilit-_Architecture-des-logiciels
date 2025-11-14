@@ -1,4 +1,4 @@
-package com.mycompany.tickets;
+package tickets;
 
 public class VideoDescription implements TicketDescription {
     private final String pathOrUrl;

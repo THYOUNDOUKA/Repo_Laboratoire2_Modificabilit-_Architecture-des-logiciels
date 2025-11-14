@@ -1,8 +1,4 @@
-package com.mycompany.tickets;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+package tickets;
 
 public class User {
     private int userID;

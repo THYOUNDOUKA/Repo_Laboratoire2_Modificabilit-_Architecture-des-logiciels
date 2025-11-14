@@ -1,4 +1,4 @@
-package com.mycompany.tickets;
+package tickets;
 
 public enum TicketStatus {
     OUVERT, ASSIGNE, VALIDATION, TERMINE

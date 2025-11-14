@@ -1,4 +1,4 @@
-package com.mycompany.tickets;
+package tickets;
 
 public class Developer extends User {
     public Developer(int userID, String name, String email) {

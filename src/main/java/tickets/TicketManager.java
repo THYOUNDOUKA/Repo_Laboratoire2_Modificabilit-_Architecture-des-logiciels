@@ -1,13 +1,27 @@
-package com.mycompany.tickets;
+package tickets;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 public class TicketManager {
 
-    private final List<User> users;
-    private final List<Ticket> tickets;
+    private  List<User> users;
+    private  List<Ticket> tickets;
     /** Acteur courant (ex. admin ou user connecté) */
-    private final User currentUser;
+    private  User currentUser;
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
 
     public TicketManager(List<User> users, List<Ticket> tickets, User currentUser) {
         this.users = new ArrayList<>(Objects.requireNonNull(users));
@@ -142,5 +156,19 @@ public class TicketManager {
                         " [" + t.getStatus() + "] - Priorité: " + t.getPriority()
         ));
         return Collections.unmodifiableList(tickets);
+    }
+    public void exportTicket(Ticket ticket, ExportStrategy strategy, OutputStream out) {
+        if (ticket == null) { System.out.println("Erreur: ticket null"); return; }
+        if (strategy == null) { System.out.println("Erreur: strategy null"); return; }
+        if (out == null) { System.out.println("Erreur: OutputStream null"); return; }
+        try {
+            strategy.export(ticket, out);
+        } catch (IOException e) {
+            System.out.println("Erreur export: " + e.getMessage());
+        }
+    }
+    public void addUser(User u) {
+        if (u == null) throw new IllegalArgumentException("Utilisateur null");
+        users.add(u);
     }
 }

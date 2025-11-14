@@ -1,4 +1,4 @@
-package com.mycompany.tickets;
+package tickets;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +21,8 @@ public class Ticket {
     private User creator;
     private Developer assignee;
 
-    // Dans ton diagramme, addComment(TicketDescription) ⇒ on modélise les commentaires ainsi :
-    private final List<TicketDescription> comments = new ArrayList<>();
+
+    private final List<Comment> comments = new ArrayList<>();
 
     // --- Constructeur principal
     public Ticket(int ticketID, String title, User creator, Priority priority) {
@@ -47,9 +47,10 @@ public class Ticket {
     public Date getUpdateDate() { return new Date(updateDate.getTime()); }
     public User getCreator() { return creator; }
     public Developer getAssignee() { return assignee; }
-    public List<TicketDescription> getComments() { return Collections.unmodifiableList(comments); }
 
-    // --- Méthodes correspondantes au diagramme
+    public List<Comment> getComments() {
+        return comments;
+    }
 
     /** assignTo(user: User) ; on exige à l’exécution que ce soit un Developer */
     public void assignTo(User user) {
@@ -58,7 +59,7 @@ public class Ticket {
             throw new IllegalArgumentException("assignTo exige un Developer");
         }
         this.assignee = (Developer) user;
-        // passage à ASSIGNE si on vient d'OUVERT
+
         if (this.status == TicketStatus.OUVERT) {
             this.status = TicketStatus.ASSIGNE;
         }
@@ -69,7 +70,7 @@ public class Ticket {
     public void updateStatus(TicketStatus newStatus) {
         Objects.requireNonNull(newStatus, "status null");
 
-        // règles simples du workflow
+
         switch (this.status) {
             case OUVERT -> {
                 if (newStatus != TicketStatus.ASSIGNE && newStatus != TicketStatus.TERMINE)
@@ -88,7 +89,7 @@ public class Ticket {
         }
 
         this.status = newStatus;
-        // si terminé, on libère l’assignation (pratique courante)
+
         if (this.status == TicketStatus.TERMINE) {
             this.assignee = null;
         }
@@ -111,9 +112,13 @@ public void showDescription(){
     }
 
     /** addComment(comment: TicketDescription) */
-    public void addComment(TicketDescription comment) {
-        comments.add(Objects.requireNonNull(comment, "comment null"));
+    public void addComment(User author, TicketDescription content) {
+        Objects.requireNonNull(author, "author null");
+        Objects.requireNonNull(content, "content null");
+        Comment newComment = new Comment(author, content);
+        comments.add(newComment);
         touch();
+        System.out.println( author.getName() + " a ajouté un commentaire au ticket #" + ticketID);
     }
 
     // --- utilitaire interne

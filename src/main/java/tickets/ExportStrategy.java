@@ -1,4 +1,4 @@
-package com.mycompany.tickets;
+package tickets;
 
 import java.io.IOException;
 import java.io.OutputStream;
