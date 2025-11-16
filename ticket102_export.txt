@@ -1,0 +1,17 @@
+========================
+       TICKET #102
+========================
+Titre      : Feature: Export Excel
+Statut     : TERMINE
+Priorité   : MOYENNE
+Créateur   : Alice
+Assigné à  : (non assigné)
+Créé le    : Sun Oct 26 17:04:23 EDT 2025
+Modifié le : Sun Oct 26 17:04:23 EDT 2025
+
+----- Description -----
+tickets.ImageDescription@7ef20235
+
+----- Commentaires -----
+- Alice (Sun Oct 26 17:04:23 EDT 2025): tickets.TextDescription@27d6c5e0
+- Bob (Sun Oct 26 17:04:23 EDT 2025): tickets.TextDescription@4f3f5b24

@@ -1,0 +1,18 @@
+========================
+       TICKET #101
+========================
+Titre      : Bug: sauvegarde crash
+Statut     : TERMINE
+Priorité   : HAUTE
+Créateur   : Alice
+Assigné à  : (non assigné)
+Créé le    : Sun Oct 26 17:04:23 EDT 2025
+Modifié le : Sun Oct 26 17:04:23 EDT 2025
+
+----- Description -----
+tickets.TextDescription@448139f0
+
+----- Commentaires -----
+- Alice (Sun Oct 26 17:04:23 EDT 2025): tickets.TextDescription@7ba4f24f
+- Bob (Sun Oct 26 17:04:23 EDT 2025): tickets.ImageDescription@58372a00
+- Chris (Sun Oct 26 17:04:23 EDT 2025): tickets.VideoDescription@4dd8dc3
